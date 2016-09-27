@@ -1,5 +1,5 @@
 source("Helper.R")
-SetupEnvironment(requiredPackages = c("caret", "reshape"))
+SetupEnvironment(requiredPackages = c("caret", "reshape", "data.table"))
 
 # read single file
 
@@ -12,3 +12,11 @@ data <- read.csv("../../../Downloads/mstcgl/MBANK.mst", header=TRUE)
 # rename column names
 names(data) <- gsub("X.", "", names(data))
 names(data) <- gsub("\\.", "", names(data))
+
+# add columns
+
+data = as.data.table(data)
+
+data[ , Change := OPEN / shift(OPEN, 1L, type="lag")]
+
+rm(list = ls())
