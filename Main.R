@@ -12,11 +12,23 @@ data <- read.csv("../../../Downloads/mstcgl/MBANK.mst", header=TRUE)
 # rename column names
 names(data) <- gsub("X.", "", names(data))
 names(data) <- gsub("\\.", "", names(data))
-
+names(data) <- sapply(names(data), ToCamelCase)
 # add columns
 
 data = as.data.table(data)
 
-data[ , Change := OPEN / shift(OPEN, 1L, type="lag")]
+data[ , OpenChange := OPEN / shift(OPEN, 1L, type="lag")]
+data[ , HighChange := OPEN / shift(OPEN, 1L, type="lag")]
+data[ , LowChange := OPEN / shift(OPEN, 1L, type="lag")]
+data[ , CloseChange := OPEN / shift(OPEN, 1L, type="lag")]
+data[ , VolumeChange := OPEN / shift(OPEN, 1L, type="lag")]
 
 rm(list = ls())
+
+# Split into training and validation
+
+validation_index <- createDataPartition(dataset$Species, p=0.80, list=FALSE)
+
+validation <- dataset[-validation_index,]
+
+dataset <- dataset[validation_index,]

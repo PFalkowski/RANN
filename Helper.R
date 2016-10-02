@@ -27,4 +27,9 @@ SetWorkingDirectory <- function(path)
   }
 }
 
-
+ToCamelCase <- function(x)
+{ 
+  lower <- tolower(x)
+  capit <- function(x) paste0(toupper(substring(lower, 1, 1)), substring(lower, 2, nchar(lower)))
+  sapply(strsplit(lower, "\\."), function(lower) paste(capit(lower), collapse=""))
+}
