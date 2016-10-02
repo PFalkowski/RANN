@@ -23,6 +23,7 @@ data[ , LowChange := Low / shift(Low, 1L, type="lag")]
 data[ , CloseChange := Close / shift(Close, 1L, type="lag")]
 data[ , VolChange := Vol / shift(Vol, 1L, type="lag")]
 
+
 # add predicted value
 
 data[ , Predicted := Close < shift(Open, 1L, type="lead")]
@@ -35,7 +36,7 @@ validation_index <- createDataPartition(data$Ticker, p=0.80, list=FALSE)
 
 validation <- data[-validation_index,]
 
-dataset <- dataset[validation_index,]
+data <- data[validation_index,]
 
 # make predictions
 
