@@ -17,18 +17,25 @@ names(data) <- sapply(names(data), ToCamelCase)
 
 data = as.data.table(data)
 
-data[ , OpenChange := OPEN / shift(OPEN, 1L, type="lag")]
-data[ , HighChange := OPEN / shift(OPEN, 1L, type="lag")]
-data[ , LowChange := OPEN / shift(OPEN, 1L, type="lag")]
-data[ , CloseChange := OPEN / shift(OPEN, 1L, type="lag")]
-data[ , VolumeChange := OPEN / shift(OPEN, 1L, type="lag")]
+data[ , OpenChange := Open / shift(Open, 1L, type="lag")]
+data[ , HighChange := High / shift(High, 1L, type="lag")]
+data[ , LowChange := Low / shift(Low, 1L, type="lag")]
+data[ , CloseChange := Close / shift(Close, 1L, type="lag")]
+data[ , VolChange := Vol / shift(Vol, 1L, type="lag")]
 
-rm(list = ls())
+# add predicted value
+
+data[ , Predicted := Close < shift(Open, 1L, type="lead")]
+  
+#rm(list = ls())
 
 # Split into training and validation
 
-validation_index <- createDataPartition(dataset$Species, p=0.80, list=FALSE)
+validation_index <- createDataPartition(data$Ticker, p=0.80, list=FALSE)
 
-validation <- dataset[-validation_index,]
+validation <- data[-validation_index,]
 
 dataset <- dataset[validation_index,]
+
+# make predictions
+
